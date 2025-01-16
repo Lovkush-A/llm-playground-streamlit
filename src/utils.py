@@ -34,8 +34,8 @@ def _generate_response(text, model_name, max_length):
 
 def get_pretrained_response(text):
     """Get response from pretrained model"""
-    return _generate_response(text, "meta/meta-llama-3-8b", max_length=100)
+    return _generate_response(text, "meta/meta-llama-3-8b", max_length=50)
 
 def get_chatbot_response(text):
     """Get response from chatbot model"""
-    return _generate_response(text, "meta/meta-llama-3-8b-instruct", max_length=100) 
+    return _generate_response(text, "meta/meta-llama-3-8b-instruct", max_length=50) 
