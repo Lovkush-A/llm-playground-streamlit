@@ -42,7 +42,7 @@ def get_chatbot_response(text):
     return _generate_response(text, "meta/meta-llama-3-8b-instruct", max_length=50) 
 
 
-def generate_goodfire_response(text, steering_instructions=""):
+def generate_goodfire_response(text, steering_instructions="", steering_strength=0.5):
     """Get response from goodfire model.
     
     Based on https://docs.goodfire.ai/quickstart
@@ -55,19 +55,20 @@ def generate_goodfire_response(text, steering_instructions=""):
     client = goodfire.Client(api_key=GOODFIRE_API_KEY)
     variant = goodfire.Variant("meta-llama/Meta-Llama-3.1-8B-Instruct")
 
-    if steering_instructions:
-        edits = client.features.AutoSteer(
-            specification=steering_instructions,
+    if steering_instructions and steering_strength != 0:
+        features = client.features.search(
+            steering_instructions,
             model=variant,
+            top_k=1
         )
-        variant.set(edits)
+        variant.set(features[0], steering_strength)
 
     output = ""
     for token in client.chat.completions.create(
         [{"role": "user", "content": text}],
         model=variant,
         stream=True,
-        max_completion_tokens=50,
+        max_completion_tokens=150,
     ):
         output += token.choices[0].delta.content
 
