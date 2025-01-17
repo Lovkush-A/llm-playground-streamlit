@@ -1,4 +1,5 @@
 import replicate
+import goodfire
 import os
 from dotenv import load_dotenv
 
@@ -39,3 +40,35 @@ def get_pretrained_response(text):
 def get_chatbot_response(text):
     """Get response from chatbot model"""
     return _generate_response(text, "meta/meta-llama-3-8b-instruct", max_length=50) 
+
+
+def generate_goodfire_response(text, steering_instructions=""):
+    """Get response from goodfire model.
+    
+    Based on https://docs.goodfire.ai/quickstart
+    """
+    # get api key from environment variable
+    GOODFIRE_API_KEY = os.environ.get('GOODFIRE_API_KEY')
+    if not GOODFIRE_API_KEY:
+        raise Exception("GOODFIRE_API_KEY environment variable not set")
+
+    client = goodfire.Client(api_key=GOODFIRE_API_KEY)
+    variant = goodfire.Variant("meta-llama/Meta-Llama-3.1-8B-Instruct")
+
+    if steering_instructions:
+        edits = client.features.AutoSteer(
+            specification=steering_instructions,
+            model=variant,
+        )
+        variant.set(edits)
+
+    output = ""
+    for token in client.chat.completions.create(
+        [{"role": "user", "content": text}],
+        model=variant,
+        stream=True,
+        max_completion_tokens=50,
+    ):
+        output += token.choices[0].delta.content
+
+    return output
