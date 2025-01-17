@@ -16,6 +16,8 @@ st.title("Steering LLMs")
 st.markdown("""
 This page demonstrates the power of steering LLMs using SAE features.
 This is done using [Goodfire's tools](https://docs.goodfire.ai/introduction).
+You can also experiment with steering directly on [their website](https://platform.goodfire.ai/chat/new?model=70b).
+            
 You can provide steering instructions and choose how much to steer the model.
 If this is your first time, we recommend using default strengths of 0 (so no steering) and 0.5.
 """)

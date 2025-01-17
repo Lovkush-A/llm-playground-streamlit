@@ -1,0 +1,3 @@
+[server]
+# The main script that Streamlit will run
+entrypoint = "src/Home.py"
