@@ -2,7 +2,7 @@ import streamlit as st
 from utils import get_pretrained_response, get_chatbot_response
 
 st.set_page_config(
-    page_title="Pre-trained model vs chatbot model",
+    page_title="Pre-trained vs chatbot",
     page_icon="🤖"
 )
 
